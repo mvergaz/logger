@@ -1,0 +1,8 @@
+[
+    {
+        "key": "port number",
+        "value": 3009,
+        "comments": "Service port number ( > 3000). Use this configuration if port 3000 is already in use"
+    }
+    
+]
