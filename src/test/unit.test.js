@@ -3,18 +3,21 @@ const fs = require('fs')
     , path = require("path")
     , configFilePath = path.resolve(process.env.PWD, "config.json")
     , config = require(configFilePath)
-    , mockFolder = '__mock__'
+    //, mockFolder = '__mock__'
     , logsFolder = config.find(c => c.key === "logs folder").value || 'logs'
-    , mockLogFolder = path.resolve(process.env.PWD, mockFolder, logsFolder )
+    , mockLogFolder = path.resolve(process.env.PWD, logsFolder)
+    , logsFolderTree = require('../lib/logsFolderTree')
 
 describe('service unit tests', () => {
 
     beforeAll(() => {
-        fs.mkdirSync( mockLogFolder )
+        if (!fs.existsSync(mockLogFolder))
+            fs.mkdirSync(mockLogFolder)
+        logsFolderTree()
     })
 
     afterAll(async () => {
-        fs.rmdirSync( mockLogFolder )
+        fs.rmdirSync(mockLogFolder, { recursive: true })
     })
 
     test('expects the config file to exist', async () => {
@@ -31,8 +34,13 @@ describe('service unit tests', () => {
         expect(logsFolder).not.toBeNull()
     })
 
-    test('expects logs folder to exists', async () => {        
+    test('expects logs folder to exists', async () => {
         expect(fs.existsSync(mockLogFolder)).toBeTruthy()
+    })
+
+    test('expects logs folder tree to exists', async () => {
+        let monthLog = path.resolve(mockLogFolder, '2022', '06')
+        expect(fs.existsSync(monthLog)).toBeTruthy()
     })
 
 })

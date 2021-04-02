@@ -1,3 +1,4 @@
+"use strict"
 const router = require('express').Router()
 module.exports = (app) => {
     app.use(require('express').json())
@@ -11,7 +12,6 @@ module.exports = (app) => {
     router.get('/500', (req, res) => { throw new Error("Error") })
 
     app.use(router)
-
 
     app.use((err, req, res, next) => {        
         const stackLines = err.stack.split("\n");
