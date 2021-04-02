@@ -1,5 +1,5 @@
 const router = require('express').Router()
-module.exports = function (app) {
+module.exports = (app) => {
     app.use(require('express').json())
 
     router.get('/ping', (req, res) =>
@@ -18,6 +18,4 @@ module.exports = function (app) {
         const errMessage = stackLines[0] + "; " + stackLines[1].trim() + "\n";
         res.status(500).send(errMessage)
     })
-
-
 }
