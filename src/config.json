@@ -3,6 +3,11 @@
         "key": "port number",
         "value": 3009,
         "comments": "Service port number ( > 3000). Use this configuration if port 3000 is already in use"
+    },
+    {
+        "key": "logs folder",
+        "value": "logs",
+        "comments": "The logs folder starting from microservice folder. Required!"
     }
     
 ]
