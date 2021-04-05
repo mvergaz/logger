@@ -5,7 +5,7 @@ const fs = require('fs')
     , config = require(configFilePath)
     , logsFolder = config.find(c => c.key === "logs folder").value || 'logs'
     , mockLogsFolder = path.resolve(process.env.PWD, logsFolder)
-//, mockLogsFolderTree = require('./logsFolderTree')
+    , logPathGenerator = require('./generateLogPath')
 
 const findFolder = ($destLog) => {
     let dest = $destLog.split('-')
@@ -27,21 +27,21 @@ module.exports = ($origin, $tag, $data, $format = 'plain') => {
     }
     origin = $origin.trim()
     tag = $tag.trim().replace(/ /g, '-')
-    data = ($format == 'json') ? JSON.serialize($data) : $data
-    let now = new Date().toISOString().replace(/T/g, ' ').substring(0, 19)
-    let destLog = now.substring(0, 7)
-    let destFolder = findFolder(destLog)
+    data = ($format == 'json') ? JSON.serialize($data) : $data    
+    let now = new Date()
+    let destFolder = logPathGenerator(now)
     if (fs.existsSync(destFolder)) {
-        let logName = now.substring(0, 10).replace(/-/g, '_')
+        let logName = now.toISOString().substring(0, 10).replace(/-/g, '_')
         let logFullName = path.resolve(destFolder, logName + '.log')
         try{
-            fs.appendFileSync(logFullName, `${now};${origin};${tag};${data}\n`)
+            const moment = now.toISOString().replace(/T/g, ' ').substring(0, 19)
+            fs.appendFileSync(logFullName, `${moment};${origin};${tag};${data};${$format}\n`)
             return '200-ok'
         }catch(ex){
             return ex.message
         }
         
-    } else {
+    } /*istanbul ignore next*/ else {
         return '400-No dest folder found'
     }
 }
