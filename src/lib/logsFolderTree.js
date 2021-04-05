@@ -27,11 +27,8 @@ module.exports = () => {
                     fs.mkdirSync(monthFolder)
             }
         }
-
     }/*istanbul ignore next*/else {
-
         fs.mkdirSync(mockLogsFolder)
-
         this()
     }
 }
