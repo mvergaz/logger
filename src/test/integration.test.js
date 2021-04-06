@@ -21,12 +21,12 @@ describe('service integration tests', () => {
     })
 
     test('expects filterByTag to create correct log entry', async () => {
-        const tag = 'tag', data = 'data', format = 'plain'
+        const tag = 'login', data = 'data', format = 'plain'
             , moment = new Date().toISOString().replace(/T/g, ' ').substring(0, 19)
             , expectedEntry = `${moment};${tag};${data};${format}\n`
             , logPathGenerated = logPathGenerator()
         fs.writeFileSync(logPathGenerated,'')
         filterByTag(tag,data,format)
         expect(fs.readFileSync(logPathGenerated).toString()).toBe(expectedEntry)
-    })
+    })    
 })

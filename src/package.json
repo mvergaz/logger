@@ -5,7 +5,7 @@
     "main": "index.js",
     "jest": {
         "watchPathIgnorePatterns": [
-            "__mock__"
+            "__mock__", "config.json"
         ]
     },
     "scripts": {

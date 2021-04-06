@@ -40,8 +40,8 @@ describe('service unit tests', () => {
         expect(fs.existsSync(mockLogFolder)).toBeTruthy()
     })
 
-    test('expects logs folder tree to exists', async () => {
-        let monthLog = path.resolve(mockLogFolder, '2022', '06')
+    test('expects logs folder tree to exist', async () => {
+        let monthLog = path.resolve(mockLogFolder, '2021', '01')
         expect(fs.existsSync(monthLog)).toBeTruthy()
     })
 
@@ -58,9 +58,32 @@ describe('service unit tests', () => {
         expect(logPathGenerated).toBe(logPathExpected)
     })
 
-    test('expects filterByTag to return ok', async () => {
+
+
+
+    test('expects filterByTag to return ko - tag not allowed', async () => {
         const tag = 'tag', data = 'data', format = 'plain'
-        expect(filterByTag(tag,data,format)).toBe('ok')
+        const response = filterByTag(tag, data, format)
+        expect(response).toBe('ko - tag not allowed')
+    })
+
+    test('expects filterByTag to return ok', async () => {
+        const tag = 'login', data = 'data', format = 'plain'
+        expect(filterByTag(tag, data, format)).toBe('ok')
+    })
+
+    test('expects "allowed tags" setting to exist', async () => {
+        expect(config.find(c => c.key === "allowed tags").value).not.toBeNull()
+    })
+
+
+
+    test('expects appendFileSync to fail', async () => {
+        fs.renameSync(mockLogFolder, mockLogFolder + '_')
+        const tag = 'login', data = 'data', format = 'plain'
+        const response = filterByTag(tag, data, format)
+        fs.rmdirSync(mockLogFolder + '_', { recursive: true })
+        expect(response).toBe('ko')
     })
 
 })

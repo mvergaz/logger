@@ -15,7 +15,7 @@ module.exports = () => {
         let yearFolder
             , month
             , monthFolder
-        for (let i = 2020; i < 2100; i++) {
+        for (let i = 2020; i < 2022; i++) {
             yearFolder = path.resolve(mockLogsFolder, i.toString())
             if (!fs.existsSync(yearFolder))
                 fs.mkdirSync(yearFolder)
