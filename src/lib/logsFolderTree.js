@@ -1,4 +1,5 @@
 "use strict"
+
 const fs = require('fs')
     , path = require("path")
     , configFilePath = path.resolve(process.env.PWD, "config.json")
@@ -12,6 +13,7 @@ const fs = require('fs')
 module.exports = () => {
 
     if (fs.existsSync(mockLogsFolder)) {
+        
         let yearFolder
             , month
             , monthFolder

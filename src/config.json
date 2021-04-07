@@ -15,5 +15,10 @@
             "login"
         ],
         "comments": "Array of allowed tags. Optional"
+    },
+    {
+        "key": "max data size",
+        "value": 250,
+        "comments": "Max size for entry data. 250 by default"
     }
 ]
