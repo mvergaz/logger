@@ -59,10 +59,19 @@ describe('service integration tests', () => {
 
     })
 
-    test.only('expects get', async () => {
-        const response = await request(server).get('/')
-        //console.log(response.text)        
-        expect(response.text).toBe("hola\nadiós\n")
+    test('expects get /log to Match "login;data;plain"', async () => {
+        const response = await request(server).get('/log')
+        expect(response.text).toMatch(/login;data;plain/)
+    })
 
+    test('expects get /log/today? to Match "login;data;plain"', async () => {
+        const today = new Date().toISOString().substring(0, 10)
+        const response = await request(server).get('/log/' + today)        
+        expect(response.text).toMatch(/login;data;plain/)
+    })
+
+    test('expects get /log/0 to return status 400', async () => {        
+        const response = await request(server).get('/log/0')
+        expect(response.status).toBe(400)
     })
 })

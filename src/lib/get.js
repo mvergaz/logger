@@ -1,21 +1,18 @@
 "use strict"
 
 const fs = require('fs')
-    , path = require("path")
-    , configFilePath = path.resolve(process.env.PWD, "config.json")
-    , config = require(configFilePath)
-    , logsFolder = config.find(c => c.key === "logs folder").value || 'logs'
-    , mockLogsFolder = path.resolve(process.env.PWD, logsFolder)
+    , path = require('path')
+    , getConfig = require('./getConfig')
+    , mockLogsFolder = path.resolve(process.env.PWD, getConfig('logs folder').value || 'logs')
 
 /**
- * Merge in only one all logs files
+ * Pipe all logs files to end-point response
  */
 module.exports = (res) => {
 
     let yearFolder
         , monthFolder
         , logFile
-        //, fileStream
 
     fs.readdirSync(mockLogsFolder).forEach(y => {
         yearFolder = path.resolve(mockLogsFolder, y)
@@ -25,11 +22,10 @@ module.exports = (res) => {
                 if (fs.statSync(monthFolder).isDirectory()) {
                     fs.readdirSync(monthFolder).forEach(log => {
                         logFile = path.resolve(monthFolder, log)                        
-                        //fs.createReadStream(logFile).pipe(process.stdout)
                         fs.createReadStream(logFile).pipe(res)
                     })
                 }
             })
         }
-    })    
+    })
 }

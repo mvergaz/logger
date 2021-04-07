@@ -1,10 +1,10 @@
 "use strict"
 
 const router = require('express').Router()
-    , fs = require('fs')
+    , fs = require('fs')    
     , post = require('./lib/post')
     , logPathGenerator = require('./lib/generateLogPath')
-    , getRecursiveLogs = require('./lib/getRecursiveTreeLogs')
+    , get = require('./lib/get')
 
 module.exports = (app) => {
     app.use(require('express').json())
@@ -17,21 +17,19 @@ module.exports = (app) => {
 
     router.get('/500', (req, res) => { throw new Error("Error") })
 
-    router.get('/:now?', (req, res) => {
+    router.get('/log/:now?', (req, res) => {
         if (req.params.now) {
-            const path = logPathGenerator(req.params.now)
-            if (fs.existsSync(path))
-                res.sendFile(path)
+            let logFile = logPathGenerator(new Date(req.params.now))
+            if (fs.existsSync(logFile))
+                res.sendFile(logFile)
             else
                 res.status(400).send()
-        } else {
-            console.log('Recursive!')
-            getRecursiveLogs(res)
-        }
+        } else             
+            get(res)        
     })
 
     router.post('/', (req, res) => {
-        const msg = post(req.body.tag, req.body.data, req.body.format)
+        let msg = post(req.body.tag, req.body.data, req.body.format)
         res.json({
             message: msg
         })
@@ -40,8 +38,8 @@ module.exports = (app) => {
     app.use(router)
 
     app.use((err, req, res, next) => {
-        const stackLines = err.stack.split("\n");
-        const errMessage = stackLines[0] + "; " + stackLines[1].trim() + "\n";
+        let stackLines = err.stack.split("\n");
+        let errMessage = stackLines[0] + "; " + stackLines[1].trim() + "\n";
         res.status(500).send(errMessage)
     })
 }

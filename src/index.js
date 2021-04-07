@@ -7,7 +7,7 @@ let listenerPort = 3000;
 
 if (fs.existsSync(configFilePath)) {
     const config = require(configFilePath)
-    console.log("Config file found. Search for a valid port number > 3000...")
+    //console.log("Config file found. Search for a valid port number > 3000...")
     const port = config.find(c => c.key === "port number").value || 3000
     if (port > 3000)
         listenerPort = port

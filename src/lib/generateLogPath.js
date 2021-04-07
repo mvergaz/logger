@@ -1,9 +1,8 @@
 "use strict"
 
 const path = require("path")
-    , configFilePath = path.resolve(process.env.PWD, "config.json")
-    , config = require(configFilePath)
-    , logsFolder = config.find(c => c.key === "logs folder").value || 'logs'
+    , getConfig = require('../lib/getConfig')    
+    , logsFolder = getConfig('logs folder').value || 'logs'
     , mockLogsFolder = path.resolve(process.env.PWD, logsFolder)
 
 module.exports = ($now = new Date()) => {
