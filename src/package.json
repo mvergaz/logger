@@ -1,11 +1,11 @@
 {
     "name": "logger",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "Logger microservice",
     "main": "index.js",
     "jest": {
         "watchPathIgnorePatterns": [
-            "__mock__", "config.json"
+            "logs", "config.json"
         ]
     },
     "scripts": {
