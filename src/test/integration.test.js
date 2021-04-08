@@ -6,17 +6,17 @@ const fs = require('fs')
     , configFilePath = path.resolve(process.env.PWD, "config.json")
     , config = require(configFilePath)
     , logsFolder = config.find(c => c.key === "logs folder").value || 'logs'
-    , mockLogFolder = path.resolve(process.env.PWD, logsFolder)
+    , logsFolderPath = path.resolve(process.env.PWD, logsFolder)
     , logsFolderTree = require('../lib/logsFolderTree')
-    , logPathGenerator = require('../lib/generateLogPath')
-    , filterByTag = require('../lib/post')
+    , logPathGenerator = require('../lib/logPathGenerator')
+    , responser = require('../lib/responser')
 
 let server
 
 describe('service integration tests', () => {
     beforeAll(() => {
-        if (!fs.existsSync(mockLogFolder))
-            fs.mkdirSync(mockLogFolder)
+        if (!fs.existsSync(logsFolderPath))
+            fs.mkdirSync(logsFolderPath)
         logsFolderTree()
         server = require('../index')
     })
@@ -46,7 +46,7 @@ describe('service integration tests', () => {
         const response = await request(server).post('/').send({
             tag, data, format
         })
-        expect(response.body).toMatchObject({ message: 'ok' })
+        expect(response.body).toMatchObject({ message: responser.OK })
         expect(fs.readFileSync(logPathGenerated).toString()).toBe(expectedEntry)
     })
 
@@ -55,7 +55,7 @@ describe('service integration tests', () => {
         const response = await request(server).post('/').send({
             tag, data, format
         })
-        expect(response.body).toMatchObject({ message: 'ko - tag not allowed' })
+        expect(response.body).toMatchObject({ message: responser.TAG_NOT_ALLOWED })
 
     })
 

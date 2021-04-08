@@ -1,7 +1,7 @@
 "use strict"
 
 const path = require("path")
-    , getConfig = require('../lib/getConfig')    
+    , getConfig = require('./getConfig')    
     , logsFolder = getConfig('logs folder').value || 'logs'
     , mockLogsFolder = path.resolve(process.env.PWD, logsFolder)
 

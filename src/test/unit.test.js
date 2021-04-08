@@ -4,23 +4,23 @@ const fs = require('fs')
     , path = require("path")
     , configFilePath = path.resolve(process.env.PWD, "config.json")
     , config = require(configFilePath)
-    //, mockFolder = '__mock__'
     , logsFolder = config.find(c => c.key === "logs folder").value || 'logs'
-    , mockLogFolder = path.resolve(process.env.PWD, logsFolder)
+    , logsFolderPath = path.resolve(process.env.PWD, logsFolder)
     , logsFolderTree = require('../lib/logsFolderTree')
-    , logPathGenerator = require('../lib/generateLogPath')
-    , filterByTag = require('../lib/post')
+    , logPathGenerator = require('../lib/logPathGenerator')
+    , post = require('../lib/post')
+    , responser = require('../lib/responser')
 
 describe.skip('service unit tests', () => {
 
     beforeAll(() => {
-        if (!fs.existsSync(mockLogFolder))
-            fs.mkdirSync(mockLogFolder)
+        if (!fs.existsSync(logsFolderPath))
+            fs.mkdirSync(logsFolderPath)
         logsFolderTree()
     })
 
     afterAll(async () => {
-        //fs.rmdirSync(mockLogFolder, { recursive: true })
+        //fs.rmdirSync(logsFolderPath, { recursive: true })
     })
 
     test('expects the config file to exist', async () => {
@@ -38,11 +38,11 @@ describe.skip('service unit tests', () => {
     })
 
     test('expects logs folder to exists', async () => {
-        expect(fs.existsSync(mockLogFolder)).toBeTruthy()
+        expect(fs.existsSync(logsFolderPath)).toBeTruthy()
     })
 
     test('expects logs folder tree to exist', async () => {
-        let monthLog = path.resolve(mockLogFolder, '2021', '01')
+        let monthLog = path.resolve(logsFolderPath, '2021', '01')
         expect(fs.existsSync(monthLog)).toBeTruthy()
     })
 
@@ -52,7 +52,7 @@ describe.skip('service unit tests', () => {
             , logPathExpected =
                 path.resolve(
                     process.env.PWD,
-                    mockLogFolder,
+                    logsFolderPath,
                     ...now.substring(0, 7).split('-'),
                     now.substring(0, 10).replace(/-/g, '_') + '.log'
                 )
@@ -61,13 +61,13 @@ describe.skip('service unit tests', () => {
 
     test('expects post to return ko - tag not allowed', async () => {
         const tag = 'tag', data = 'data', format = 'plain'
-        const response = filterByTag(tag, data, format)
-        expect(response).toBe('ko - tag not allowed')
+        const response = post(tag, data, format)
+        expect(response).toBe(responser.TAG_NOT_ALLOWED)
     })
 
     test('expects post to return ok', async () => {
         const tag = 'login', data = 'data', format = 'plain'
-        expect(filterByTag(tag, data, format)).toBe('ok')
+        expect(post(tag, data, format)).toBe(responser.OK)
     })
 
     test('expects "allowed tags" setting to exist', async () => {
@@ -75,11 +75,10 @@ describe.skip('service unit tests', () => {
     })
 
     test('expects appendFileSync to fail', async () => {
-        fs.renameSync(mockLogFolder, mockLogFolder + '_')
+        fs.renameSync(logsFolderPath, logsFolderPath + '_')
         const tag = 'login', data = 'data', format = 'plain'
-        const response = filterByTag(tag, data, format)
-        fs.rmdirSync(mockLogFolder + '_', { recursive: true })
-        expect(response).toBe('ko')
+        const response = post(tag, data, format)
+        fs.rmdirSync(logsFolderPath + '_', { recursive: true })
+        expect(response).toBe(responser.KO)
     })
-
 })

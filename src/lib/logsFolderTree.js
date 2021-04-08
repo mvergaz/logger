@@ -5,7 +5,7 @@ const fs = require('fs')
     , configFilePath = path.resolve(process.env.PWD, "config.json")
     , config = require(configFilePath)
     , logsFolder = config.find(c => c.key === "logs folder").value || 'logs'
-    , mockLogsFolder = path.resolve(process.env.PWD, logsFolder)
+    , logsFolderPath = path.resolve(process.env.PWD, logsFolder)
 
 const ensureFolder = (parent, folder) => {
     let folderPath = path.resolve(parent, folder)
@@ -19,20 +19,20 @@ const ensureFolder = (parent, folder) => {
 */
 module.exports = () => {
 
-    if (fs.existsSync(mockLogsFolder)) {
+    if (fs.existsSync(logsFolderPath)) {
 
-        let yearFolder, month
+        let yearFolder, monthFolder
 
         for (let i = 2020; i < 2022; i++) {
-            yearFolder = ensureFolder(mockLogsFolder, i.toString())
+            yearFolder = ensureFolder(logsFolderPath, i.toString())
 
             for (let y = 1; y < 13; y++) {
-                month = y.toString().padStart(2, '0')
-                ensureFolder(yearFolder, month)
+                monthFolder = y.toString().padStart(2, '0')
+                ensureFolder(yearFolder, monthFolder)
             }
         }
     }/*istanbul ignore next*/else {
-        fs.mkdirSync(mockLogsFolder)
+        fs.mkdirSync(logsFolderPath)
         this()
     }
 }

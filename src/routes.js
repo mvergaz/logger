@@ -1,22 +1,31 @@
 "use strict"
 
 const router = require('express').Router()
-    , fs = require('fs')    
+    , fs = require('fs')
     , post = require('./lib/post')
-    , logPathGenerator = require('./lib/generateLogPath')
+    , logPathGenerator = require('./lib/logPathGenerator')
     , get = require('./lib/get')
 
 module.exports = (app) => {
     app.use(require('express').json())
 
+    /**
+     * Usually, to check service status
+     */
     router.get('/ping', (req, res) =>
         res.json({
             message: "pong"
         })
     )
+    /**
+     * For development & test approach only
+     */
 
     router.get('/500', (req, res) => { throw new Error("Error") })
 
+    /**
+     * Log file delivery. If !now, the whole log
+     */
     router.get('/log/:now?', (req, res) => {
         if (req.params.now) {
             let logFile = logPathGenerator(new Date(req.params.now))
@@ -24,16 +33,18 @@ module.exports = (app) => {
                 res.sendFile(logFile)
             else
                 res.status(400).send()
-        } else             
-            get(res)        
+        } else
+            get(res)
     })
 
-    router.post('/', (req, res) => {
-        let msg = post(req.body.tag, req.body.data, req.body.format)
+    /**
+     * Log entry listener
+     */
+    router.post('/', (req, res) =>
         res.json({
-            message: msg
+            message: post(req.body.tag, req.body.data, req.body.format)
         })
-    })
+    )
 
     app.use(router)
 
