@@ -9,6 +9,7 @@
         ]
     },
     "scripts": {
+        "serve":"pm2 node . --name logger",
         "test": "jest -i --watch --verbose --coverage --coverageDirectory='coverage'"
     },
     "repository": {
