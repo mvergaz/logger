@@ -14,7 +14,7 @@ module.exports = (app) => {
      */
     router.get('/ping', (req, res) =>
         res.json({
-            message: "pong"
+            message: "pong?"
         })
     )
     /**
