@@ -17,7 +17,7 @@ const ensureFolder = (parent, folder) => {
 /**
 * Ensures the logs folder tree to be created on startup
 */
-module.exports = () => {
+module.exports = function () {
 
     if (fs.existsSync(logsFolderPath)) {
 

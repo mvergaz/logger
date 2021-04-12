@@ -6,13 +6,20 @@ const fs = require("fs")
     , app = require('express')()
     , configFilePath = path.resolve(process.env.PWD, "config.json")
     , getConfig = require('./lib/getConfig')
+    , logsFolderTree = require('./lib/logsFolderTree')
 let listenerPort = 3000;
 
-if (fs.existsSync(configFilePath)) {    
+if (fs.existsSync(configFilePath)) {
     console.log("Config file found. Search for a valid port number > 3000...")
-    const port = getConfig( "port number").value || 3000
+    const port = getConfig("port number").value || 3000
     if (port > 3000)
         listenerPort = port
+    try {
+        logsFolderTree()
+    } catch (ex) {
+        console.log(ex)
+        process.exit(0)    
+    }
 } else {
     console.log("No config file found... exit")
     process.exit(0)
