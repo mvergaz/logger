@@ -30,7 +30,7 @@ module.exports = function () {
                 monthFolder = y.toString().padStart(2, '0')
                 ensureFolder(yearFolder, monthFolder)
             }
-        }
+        } 
     }/*istanbul ignore next*/else {
         fs.mkdirSync(logsFolderPath)
         this()

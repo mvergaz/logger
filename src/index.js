@@ -14,12 +14,9 @@ if (fs.existsSync(configFilePath)) {
     const port = getConfig("port number").value || 3000
     if (port > 3000)
         listenerPort = port
-    try {
-        logsFolderTree()
-    } catch (ex) {
-        console.log(ex)
-        process.exit(0)    
-    }
+
+    logsFolderTree()
+
 } else {
     console.log("No config file found... exit")
     process.exit(0)

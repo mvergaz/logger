@@ -13,6 +13,7 @@ module.exports = (res) => {
     let yearFolderPath
         , monthFolderPath
         , logFilePath
+        , count = 0
 
     fs.readdirSync(logsFolderPath).forEach(y => {
         yearFolderPath = path.resolve(logsFolderPath, y)
@@ -21,11 +22,15 @@ module.exports = (res) => {
                 monthFolderPath = path.resolve(yearFolderPath, m)
                 if (fs.statSync(monthFolderPath).isDirectory()) {
                     fs.readdirSync(monthFolderPath).forEach(log => {
-                        logFilePath = path.resolve(monthFolderPath, log)                        
+                        count++
+                        logFilePath = path.resolve(monthFolderPath, log)
                         fs.createReadStream(logFilePath).pipe(res)
                     })
                 }
             })
         }
     })
+    if (count == 0){
+        res.send()
+    }
 }
